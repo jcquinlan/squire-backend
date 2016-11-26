@@ -18,4 +18,6 @@ urlpatterns = [
     url(r'^register/', views.create_auth, name="register"),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^api/classes/', views.get_classes, name="classes"),
+    url(r'^api/races/', views.get_races, name="races"),
 ]

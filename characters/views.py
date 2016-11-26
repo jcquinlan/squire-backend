@@ -6,6 +6,7 @@ from .models import Character, Journal, Entry
 from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.decorators import api_view, permission_classes
+from choices import RACE_CHOICES, CLASS_CHOICES
 from .permissions import IsOwner
 from .serializers import CharacterSerializer, JournalSerializer, EntrySerializer, UserSerializer
 
@@ -23,6 +24,16 @@ def create_auth(request):
         return Response(serialized.data, status=status.HTTP_201_CREATED)
     else:
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated,])
+def get_classes(request):
+    return Response(CLASS_CHOICES, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated,])
+def get_races(request):
+    return Response(RACE_CHOICES, status=status.HTTP_200_OK)
 
 
 class CharacterViewSet(viewsets.ModelViewSet):

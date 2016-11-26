@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from choices import RACE_CHOICES, CLASS_CHOICES
 
 class Character(models.Model):
-    created_by = models.ForeignKey(User)
+    created_by = models.ForeignKey(User, null=True, blank=True)
     alive = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=20)
@@ -16,21 +16,21 @@ class Character(models.Model):
     race = models.CharField(max_length=30, choices=RACE_CHOICES)
     background = models.CharField(max_length=30)
     max_hitpoints = models.IntegerField()
-    current_hitpoints = models.IntegerField()
+    current_hitpoints = models.IntegerField(default=10)
     proficiency_bonus = models.IntegerField(default=2)
     strength = models.PositiveIntegerField(default=10)
-    strength_modifier = models.IntegerField(default=0);
+    strength_modifier = models.IntegerField(default=0)
     dexterity = models.PositiveIntegerField(default=10)
-    dexterity_modifier = models.IntegerField(default=0);
+    dexterity_modifier = models.IntegerField(default=0)
     constitution = models.PositiveIntegerField(default=10)
-    constitution_modifier = models.IntegerField(default=0);
+    constitution_modifier = models.IntegerField(default=0)
     intelligence = models.PositiveIntegerField(default=10)
-    intelligence_modifier = models.IntegerField(default=0);
+    intelligence_modifier = models.IntegerField(default=0)
     wisdom = models.PositiveIntegerField(default=10)
-    wisdom_modifier = models.IntegerField(default=0);
+    wisdom_modifier = models.IntegerField(default=0)
     charisma = models.PositiveIntegerField(default=10)
-    charisma_modifier = models.IntegerField(default=0);
-    armor_class = models.IntegerField()
+    charisma_modifier = models.IntegerField(default=0)
+    armor_class = models.IntegerField(default=10)
     speed = models.IntegerField(default=30)
     backstory = models.TextField(null=True, blank=True)
 
@@ -81,6 +81,8 @@ class Character(models.Model):
 
     def save(self, *args, **kwargs):
         import math
+        if not self.pk:
+            self.current_hitpoints = self.max_hitpoints
         self.strength_modifier = math.trunc((self.strength - 10) / 2)
         self.dexterity_modifier = math.trunc((self.dexterity - 10) / 2)
         self.constitution_modifier = math.trunc((self.constitution - 10) / 2)
